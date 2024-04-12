@@ -15,22 +15,37 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
     //@Bean memberService -> MemoryMemberRepository()
     //@Bean orderSerice -> MemoryMemberRepository()
-    // 이로써 new가 2번이나 호출됨. 그러면 싱글톤이 깨지는 것 아닐까?
+
+    // call AppConfig.memberService
+    // call AppConfig.memberRepository
+    // call AppConfig.memberRepository
+    // call AppConfig.orderService
+    // call AppConfig.memberRepository
+    // memberRepository가 3번 호출됨.
+
+    // 하지만 test를 직접 실행해보면!
+    // call AppConfig.memberService
+    // call AppConfig.memberRepository
+    // call AppConfig.orderService
+    // 스프링은 싱글톤을 보장해준다 !!!!!
 
     // 각 메서드에 @Bean 적어주기 -> 그러면 spring container에 등록이 된다.
     @Bean
     public MemberService memberService(){
+        System.out.println("call AppConfig.memberService");
         return new MemberServiceImpl(memberRepository());
         // 생성자 주입
     }
 
     @Bean
     public MemberRepository memberRepository() {
+        System.out.println("call AppConfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
     @Bean
     public OrderService orderService(){
+        System.out.println("call AppConfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPoliciy());
     }
 
