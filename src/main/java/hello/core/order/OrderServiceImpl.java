@@ -8,14 +8,27 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderServiceImpl implements OrderService{
-    private final MemberRepository memberRepository;
-    private final DiscountPoliciy discountPoliciy;
+    private MemberRepository memberRepository;
+    private DiscountPoliciy discountPoliciy;
 
+    // setter 수정자 의존 관계 사용
+    @Autowired
+    public void setMemberRepository(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    @Autowired
+    public void setDiscountPoliciy(DiscountPoliciy discountPoliciy) {
+        this.discountPoliciy = discountPoliciy;
+    }
+
+    /*
     @Autowired
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPoliciy discountPoliciy) {
         this.memberRepository = memberRepository;
         this.discountPoliciy = discountPoliciy;
     }
+*/
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
